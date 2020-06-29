@@ -1,4 +1,4 @@
-ngx_feature=
+ngx_feature="Nginx accept-language module"
 ngx_feature_name=
 ngx_feature_run=no
 ngx_feature_incs=
@@ -9,12 +9,23 @@ have=NGX_HTTP_HEADERS . auto/have
 . auto/feature
 
 if [ $ngx_found = yes ]; then
-    ngx_addon_name=ngx_http_accept_language_module
-    HTTP_MODULES="$HTTP_MODULES ngx_http_accept_language_module"
-    NGX_ADDON_SRCS="$NGX_ADDON_SRCS ${ngx_addon_dir}/src/ngx_http_accept_language_module.c"
+        if test -n "$ngx_module_link"; then
+                ngx_module_type=HTTP
+                ngx_module_name="ngx_http_accept_language_module"
+                ngx_module_incs=
+                ngx_module_deps=
+                ngx_module_srcs="$ngx_addon_dir/src/ngx_http_accept_language_module.c"
+                ngx_module_libs="$ngx_feature_libs"
+                . auto/module
+        else
+                ngx_addon_name=ngx_http_accept_language_module
+                HTTP_MODULES="$HTTP_MODULES ngx_http_accept_language_module"
+                NGX_ADDON_SRCS="$NGX_ADDON_SRCS ${ngx_addon_dir}/src/ngx_http_accept_language_module.c"
+        fi
 else
     cat << END
 $0: error: unable to configure the ngx_http_accept_language_module.
 END
     exit 1
 fi
+
